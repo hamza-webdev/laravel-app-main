@@ -1,0 +1,31 @@
+---
+- name: "Build a container with ansible"
+  hosts: localhost
+  connection: local
+  tasks:
+    - name: stop current running container
+      command: docker stop laravel-container
+      ignore_errors: yes
+
+    - name: remove stopped container
+      command: docker rm laravel-container
+      ignore_errors: yes
+
+    - name: remove laravel-image
+      command: docker rmi laravel-image
+      ignore_errors: yes
+
+    - name: build docker image using the Dockerfile
+      command: docker build -t laravel-image .
+
+    - name: create docker container using the laravel-image
+      command: docker run -d --name laravel-container -p 8083:80 laravel-image
+
+    # - name: create tag to image
+    #   command: docker tag laravel-image triple3a/laravel-image
+
+    # - name: push image to dockerhub
+    #   command: docker push triple3a/laravel-image
+
+    # - name: remove docker created images
+    #   command: docker rmi laravel-image triple3a/laravel-image
